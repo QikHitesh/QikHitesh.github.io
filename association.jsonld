@@ -48,39 +48,18 @@
         "holidayHours":"https://schema.org/keywords"
       }
     },
-    "Facebook":{
-      "@id":"https://schema.org/WebSite",
-        "@context":
-          {
-             "@version": 1.1,
-             "@protected": true,
-             "id":"@id",
-             "type": "@type",
-           "url":"https://schema.org/WebSite"
-          
-    }
-  },
     "WebSite":{
         "@id":"https://schema.org/WebSite",
-        "@context": [
+        "@context": 
           {
              "@version": 1.1,
              "@protected": true,
              "id":"@id",
              "type": "@type",
-            "twitter":"https://schema.org/WebSite"
-          },
-          { "@version": 1.1,
-           "@protected": true,
-           "id":"@id",
-           "type": "@type",
-           "facebook":"https://schema.org/WebSite" },
-           {"@version": 1.1,
-           "@protected": true,
-           "id":"@id",
-           "type": "@type",
-           "website":"https://schema.org/WebSite" }
-          ]
+            "twitter":"https://schema.org/WebSite",
+            "facebook":"https://schema.org/WebSite",
+            "website":"https://schema.org/WebSite"
+          }
 
     
 
