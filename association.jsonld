@@ -58,7 +58,7 @@
              "type": "@type",
             "twitter":"https://schema.org/WebSite",
             "facebook":"https://schema.org/WebSite",
-            "website":"https://schema.org/WebSite"
+            "webpage":"https://schema.org/WebSite"
           }
 
     
