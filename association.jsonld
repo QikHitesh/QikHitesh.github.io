@@ -71,7 +71,7 @@
             "@protected": true,
             "id":"@id",
             "type": "@type",
-            "stacks":"https://schema.org/WebPage"
+            "WebPage":"https://schema.org/WebPage"
 
     
           
