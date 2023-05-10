@@ -1,99 +1,971 @@
-{
-    "@context": {
-      "@version": 1.1,
-      "@protected": true,
-      "CertificationOfOrigin": {
-        "@id": "https://w3id.org/traceability#CertificationOfOrigin",
-        "@context": {
-          "@version": 1.1,
-          "@protected": true,
-  
-          "id": "@id",
-          "type": "@type"
-        }
-      },
-  "Person":{
-    "@id": "https://schema.org/Person",
-        "@context": {
-          "@version": 1.1,
-          "@protected": true,
-          "id":"@id",
-          "type": "@type",
-        "givenName":"https://schema.org/givenName",
-        "familyName":"https://schema.org/familyName",
-        "email":"https://schema.org/email",
-        "telephone":"https://schema.org/telephone",
-        "description":"https://schema.org/description",
-        "address":"https://schema.org/address"
-    
-  }
-      
-    },
-    "Organization":{
-        "@id":"https://schema.org/Organization",
-        "@context":{ "@version": 1.1,
-        "@protected": true,
-        "id":"@id",
-        "type": "@type",
-        "businessName":"https://schema.org/legalName",
-        "businessCategory":"https://schema.org/description",
-        "description":"https://schema.org/description",
-        "openingDate":"https://schema.org/foundingDate",
-        "phoneNumber":"https://schema.org/telephone",
-        "website":"https://schema.org/url",
-        "shortName":"https://schema.org/alternateName",
-        "businessLocation":"https://schema.org/location",
-        "serviceArea":"https://schema.org/areaServed",
-        "hours":"https://schema.org/keywords",
-        "holidayHours":"https://schema.org/keywords"
-      }
-    },
-    "WebSite":{
-        "@id":"https://schema.org/WebSite",
-        "@context": 
-          {
-             "@version": 1.1,
-             "@protected": true,
-             "id":"@id",
-             "type": "@type",
-            "twitter":"https://schema.org/WebSite",
-            "facebook":"https://schema.org/WebSite",
-            "webpage":"https://schema.org/WebSite"
-          }
+package commands
 
-    
+import (
+	"controller/keys"
+	"controller/mediator"
+	"controller/pkgjwt"
+	"controller/schemadid"
+	"crypto/ed25519"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"reflect"
 
-  },
-    "SmartStacks":{
-        "@id":"https://schema.org/WebPage",
-        "@context": {
-            "@version": 1.1,
-            "@protected": true,
-            "id":"@id",
-            "type": "@type",
-            "url":"https://schema.org/url"
+	"github.com/hyperledger/aries-framework-go/pkg/crypto/primitive/bbs12381g2pub"
+	"github.com/hyperledger/aries-framework-go/pkg/doc/verifiable"
 
-    
-          
-         
-    }
+	"github.com/mr-tron/base58"
 
-    },
-    "IPFS":{
-      "@id":"https://schema.org/url",
-      "@context": {
-          "@version": 1.1,
-          "@protected": true,
-          "id":"@id",
-          "type": "@type",
-          "url":"https://schema.org/url"
+	"cloud.google.com/go/datastore"
+)
 
-  
-        
-       
-  }
+var (
+	IPFSDef = `{
+		"id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+		"input_descriptors": [
+		   {
+			  "id": "identity_input",
+			  "name": "Wallet_License",
+			  "purpose": "We can only register handles purchased by a user with valid decentralized identity.",
+			  "constraints": {
+				 "limit_disclosure": "required",
+				 "fields": [
+					{
+					   "path": [
+						  "$.credentialSchema.id",
+						  "$.vc.credentialSchema.id"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "pattern": "did:example:123|did:example:456"
+					   }
+					},
+					{
+					   "path": [
+						  "$.issuer",
+						  "$.vc.issuer",
+						  "$.iss"
+					   ],
+					   "purpose": "We can only register handles if they are attested by a trusted regulatory authority.",
+					   "filter": {
+						  "type": "string",
+						  "pattern": "did:example:123|did:example:456"
+					   }
+					}
+				 ]
+			  }
+		   },
+		   {
+			  "id": "handle_registration_input",
+			  "name": "Handle Registration",
+			  "constraints": {
+				 "fields": [
+					{
+					   "path": [
+						  "$.credentialSchema.did",
+						  "$.vc.credentialSchema.did"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "pattern": "did:example:123|did:example:456"
+					   }
+					},
+					{
+					   "path": [
+						  "$.credentialSubject.handle",
+						  "$.vc.credentialSubject.handle",
+						  "$.handle"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "format": "string"
+					   }
+					}
+				 ]
+			  }
+		   },
+		   {
+			  "id": "ipfs_input",
+			  "name": "Add IPFS",
+			  "constraints": {
+				 "fields": [
+					{
+					   "path": [
+						  "$.credentialSubject.url",
+						  "$.vc.credentialSubject.url",
+						  "$.url"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "pattern": "string"
+					   }
+					}
+				 ]
+			  }
+		   }
+		],
+		"challenge": ""
+	 }`
 
-    }
- 
+	Stacks = `{
+		"id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+		"input_descriptors": [
+		   {
+			  "id": "identity_input",
+			  "name": "Wallet_License",
+			  "purpose": "We can only register handles purchased by a user with valid decentralized identity.",
+			  "constraints": {
+				 "limit_disclosure": "required",
+				 "fields": [
+					{
+					   "path": [
+						  "$.credentialSchema.id",
+						  "$.vc.credentialSchema.id"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "pattern": "did:example:123|did:example:456"
+					   }
+					},
+					{
+					   "path": [
+						  "$.issuer",
+						  "$.vc.issuer",
+						  "$.iss"
+					   ],
+					   "purpose": "We can only register handles if they are attested by a trusted regulatory authority.",
+					   "filter": {
+						  "type": "string",
+						  "pattern": "did:example:123|did:example:456"
+					   }
+					}
+				 ]
+			  }
+		   },
+		   {
+			  "id": "handle_registration_input",
+			  "name": "Handle Registration",
+			  "constraints": {
+				 "fields": [
+					{
+					   "path": [
+						  "$.credentialSchema.did",
+						  "$.vc.credentialSchema.did"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "pattern": "did:example:123|did:example:456"
+					   }
+					},
+					{
+					   "path": [
+						  "$.credentialSubject.handle",
+						  "$.vc.credentialSubject.handle",
+						  "$.handle"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "format": "string"
+					   }
+					}
+				 ]
+			  }
+		   },
+		   {
+			  "id": "ipfs_input",
+			  "name": "Add IPFS",
+			  "constraints": {
+				 "fields": [
+					{
+					   "path": [
+						  "$.credentialSubject.WebPage",
+						  "$.vc.credentialSubject.WebPage",
+						  "$.WebPage"
+					   ],
+					   "filter": {
+						  "type": "string",
+						  "pattern": "string"
+					   }
+					}
+				 ]
+			  }
+		   }
+		],
+		"challenge": ""
+	 }`
+)
+
+type createDIDRequest struct {
+	Credentials    map[string]interface{} `json:"credentials,omitempty"`
+	CredentialType string                 `json:"credentialType,omitempty"`
+	Entity         string                 `json:"entity,omitempty"`
+	Handle         string                 `json:"handle,omitempty"`
+	Association    string                 `json:"association,omitemty"`
 }
+
+// type createselfDIDRequest struct {
+// 	Credentials    map[string]interface{} `json:"credentials,omitempty"`
+// 	CredentialType string                 `json:"credentialType,omitempty"`
+// 	Entity         string                 `json:"entity,omitempty"`
+// 	Handle         string                 `json:"handle,omitempty"`
+// 	Association    string                 `json:"association,omitemty"`
+// }
+
+type createAssociationDIDRequest struct {
+	Credentials    map[string]interface{} `json:"verifiablecredentials,omitempty"`
+	CredentialType string                 `json:"credentialType,omitempty"`
+	Entity         string                 `json:"entity,omitempty"`
+	Handle         string                 `json:"handle,omitempty"`
+}
+type createAssociationDIDResponse struct {
+	Handlecred      schemadid.VerifiableCredential            `json:"handlecred"`
+	AssociationCred map[string]schemadid.VerifiableCredential `json:"associationcred"`
+}
+
+type registrationResponse struct {
+	Privkey     *bbs12381g2pub.PrivateKey `json:"privKey"`
+	Credentials string                    `json:"verifiableCredentials,omitempty"`
+}
+type DIDDB struct {
+	DID          string `json:"did"`
+	ActiveStatus bool   `json:"status"`
+}
+
+//	type ExtendedDID struct {
+//		Stacks    DIDDB `json:"stacks,omitempty"`
+//		Antivirus DIDDB `json:"antivirus,omitempty"`
+//		Email     DIDDB `json:"email,omitempty"`
+//	}
+type MapData struct {
+	Data map[string]string
+}
+
+type Association struct {
+	Associations   []string            `json:"associations"`
+	RequiredCred   map[string][]string `json:"requiredCred"`
+	CredGeneration map[string][]string `json:"credGeneration"`
+	Claims         Claims              `json:"claims"`
+}
+
+type Claims struct {
+	Handle            []string `json:"handle"`
+	Email             []string `json:"email"`
+	WalletCredentials []string `json:"wallet_credentials"`
+	Smartstacks       []string `json:"smartstacks"`
+	Antivirus         []string `json:"antivirus"`
+	Browser           []string `json:"browser"`
+	Pii               []string `json:"pii"`
+	BusinessPii       []string `json:"business_pii"`
+}
+type ExtendedDIDS struct {
+	DidDB []DIDDB `json:"diddb"`
+}
+
+const configpathReal = "D:/getAHandle/controller/commands/configDID.json"
+
+//const configpathReal = "commands/configDID.json"
+
+// func Uploadindatastore(w http.ResponseWriter, req *http.Request, med *mediator.CmdsMediator) {
+
+// 	data := map[string]string{
+// 		"key1": "value1",
+// 		"key2": "value2",
+// 	}
+
+// 	key := datastore.NameKey("keyvalue", "hsevlia", nil)
+
+// 	mapData := &MapData{
+// 		Data: data,
+// 	}
+
+// 	//key1 := "facebook"
+
+// 	// Store the entity in Datastore
+// 	_, err := med.DatastoreClient.Put(*med.Ctx, key, mapData)
+// 	if err != nil {
+// 		fmt.Println("Error storing entity:", err)
+// 		return
+// 	}
+
+// }
+
+//var DidDB *DIDD
+
+func ExtendedDIDs(w http.ResponseWriter, req *http.Request, med *mediator.CmdsMediator) {
+
+	DidDB := new(DIDDB)
+	//var associationDID []DIDDB
+	config := new(Association)
+	file, err := os.Open(configpathReal)
+	if err != nil {
+
+	}
+
+	//Response := make(map[string]interface{})
+	err = json.NewDecoder(file).Decode(&config)
+	//fmt.Println("Config is: ", config)
+	if err != nil {
+		log.Println("Error is: ", err)
+
+	}
+	entity := new(createDIDRequest)
+	//	response := new(createAssociationDIDResponse)
+
+	err = CommandPayloadDecoder(req, &entity)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	fmt.Println("\n\n--Requet is --", entity)
+
+	did, err := GetDID(entity.Entity, med)
+	if err != nil {
+		fmt.Println("error in fetching did")
+		panic(err)
+
+	}
+	fmt.Println("did of user is ", did)
+
+	//fetch public key from resolver using didDOC
+	endpoint := med.DB.DIDDocEndpoint
+
+	didDOC, err := GetDIDDoc(did, endpoint)
+	if err != nil {
+		fmt.Println("error in fetching did DOC", err)
+
+	}
+	fmt.Println("did doc is ", didDOC)
+	publicKey, err := base58.Decode(didDOC.Authentication[0].PublicKeyBase)
+	if err != nil {
+		fmt.Println("error in  deocding public key from did document", err)
+
+	}
+	//vc := &schemadid.VerifiableCredential{}
+
+	// vcByte, err := json.Marshal(entity.Credentials)
+	// verified, err := VerifyCredentials(vcByte)
+	// if err != nil {
+	// 	fmt.Println("error in verifying credentials", err)
+	// 	panic(err)
+
+	// }
+	verified := true
+	// handlevc, credentialtype, err := FetchVC(entity, med, config)
+	// Response[credentialtype] = handlevc
+	if verified == true {
+
+		//for _, j := range config.Associations {
+
+		DidDB.DID, err = GetDID(entity.Handle, med)
+		fmt.Println("DID getting of handle is ", DidDB.DID)
+		if err != nil {
+			randomBytes, err := generateRandomBytes(32)
+			if err != nil {
+				fmt.Println("--error in generating randomhash", err)
+			}
+
+			hash := sha256.Sum256(randomBytes)
+			buf := hash[:]
+			h := hex.EncodeToString(buf)
+			fmt.Printf("%64s - %6s - sha3-256 hash of user entity\n", h, "hex")
+
+			// truncate the hash to the lower 20 bytes
+			buf = hash[len(buf)-20:]
+			h = hex.EncodeToString(buf)
+			fmt.Printf("%64s - %6s - sha3-256 hash of user entity (lower 20 bytes / 160 bits)\n", h, "hex")
+
+			// prepend the multihash label for the hash algo, skip the varint length of the multihash, since that is fixed to 20
+			// buf = append([]byte{multihash.SHA3_256}, buf...)
+			// h = hex.EncodeToString(buf)
+			// fmt.Printf("%64s - %6s - multi hash prefix for sha3-256 (0x16) + hash of public key (lower 20 bytes)\n", h, "hex")
+			// base58 encode the above value
+
+			id := base58.Encode(buf)
+			fmt.Printf("%64s - %6s - multi hash prefix for sha3-256 (0x16) + hash of user entity (lower 20 bytes)\n", id, "base58")
+			d := &schemadid.DID{Method: "web", ID: id}
+			Did := "did" + ":" + d.Method + ":" + d.ID
+			fmt.Println(Did)
+			DidDB.DID = Did
+			DidDB.ActiveStatus = true
+			ExtendedDIDDocument(ed25519.PublicKey(publicKey), med, DidDB)
+			key := datastore.NameKey(med.DB.DidDB, entity.Handle, nil)
+			_, err = med.DatastoreClient.Put(*med.Ctx, key, DidDB)
+			if err != nil {
+				fmt.Println("error in storing extended did")
+				panic(err)
+
+			}
+
+			entity.Credentials["id"] = Did
+		}
+		//	entity.Credentials["id"] = DidDB.DID
+
+		fmt.Println("\n\n\n CREDENTIALS GETTING ARE====== ", entity.Credentials)
+
+		//	CALL QNS TO STORE SELF SIGNED DIDS
+
+		//QNS with DidDB and j as it value
+
+		//	associationDID = append(associationDID, *DidDB)
+		//	fmt.Println("Associated DIDs---", associationDID)
+
+		privkey := GetPrivKey(med, entity.Entity, DidDB)
+
+		//if already present credential get them
+
+		fetchedvc := GetCredentials(entity.Handle, med)
+		fmt.Println("\n\n\n---Created SELF SIGNED CREDENTIALS--", fetchedvc)
+		//fetchedvc = ""
+		//modify the credentials
+
+		vc := CreateSelfSignedCred(DidDB.DID, did, med, privkey, fetchedvc, entity)
+
+		UploadSelfSignedCredential(vc, entity.Handle, med, entity.CredentialType)
+
+		//CALL QNS HERE
+		// presentationdef, err := QNSNegotation("negotiateCredentials", entity.Association, med)
+		// if err != nil {
+		// 	fmt.Println("error in fetching presentaton defentaion from QNS", err)
+		// 	panic(err)
+
+		// }
+		qnsinput := pkgjwt.PresentationDefinition{}
+		json.Unmarshal([]byte(Stacks), &qnsinput)
+		presentationdef := &qnsinput
+		//verifiableCred.Types = append(verifiableCred.Types, entity.CredentialType)
+		fmt.Println("\n\n\nGetting presentation is ---", presentationdef)
+		if presentationdef == nil {
+			log.Fatal("empty")
+
+		}
+		verifiableCredential, _ := vc.MarshalJSON()
+		var credentialtype []string
+		var credentialgetting []string
+		credentialtype = append(credentialtype, entity.CredentialType)
+		credentialgetting = append(credentialgetting, entity.CredentialType)
+
+		ParsePopulatePresentation(entity, presentationdef, entity.Handle, med, credentialgetting, string(verifiableCredential), "selfSigned")
+
+		//Response = *vc
+		//call QNS
+		//	fmt.Println("j  did is ", j)
+
+		// key := datastore.NameKey("selfsigneddid", entity.Handle, nil)
+		// _, err = med.DatastoreClient.Put(*med.Ctx, key, associationDID)
+		// if err != nil {
+		// 	fmt.Println("error in storing slef signed did in database", err)
+
+		// }
+
+		//phoneHash, err := db.CalculateSha512Hash(entity.Entity)
+		// if err != nil {
+		// 	http.Error(w, err.Error(), http.StatusBadRequest)
+		// 	return
+		// }
+		//	fmt.Println("hash of entity", phoneHash)
+
+		//}
+
+	} else {
+		http.Error(w, "invalid credentials", http.StatusBadRequest)
+		return
+
+	}
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+func WalletDID(w http.ResponseWriter, req *http.Request, med *mediator.CmdsMediator) {
+
+	//Create DID
+
+	entity := new(createDIDRequest)
+	Response := new(registrationResponse)
+
+	err := CommandPayloadDecoder(req, &entity)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	//check Credentials in request
+	Config := new(Association)
+	file, err := os.Open(configpathReal)
+	if err != nil {
+		log.Println("Error is: ", err)
+	}
+	err = json.NewDecoder(file).Decode(&Config)
+	//fmt.Println("Config is: ", config)
+	if err != nil {
+		log.Println("Error is: ", err)
+
+	}
+
+	//Check if handle has right crdentials with it
+
+	// h := hex.EncodeToString(publicKey)
+	// fmt.Printf("%64s - %6s - public key\n", h, "hex")
+
+	DidDB, pubKey, privKey, err := GenerateWalletDID(entity.Entity, med, entity.CredentialType)
+	if err == nil {
+		fmt.Println("publi key before diddoc", pubKey)
+		DIDDocumentCreation(pubKey, med, DidDB)
+
+		Response.Privkey = privKey
+		entity.Credentials = make(map[string]interface{})
+		entity.Credentials["did"] = DidDB.DID
+
+		//create credentials
+		fmt.Println("fetch credentials", entity)
+		credentials, _, err := FetchVC(entity, med, Config)
+		if err != nil {
+			fmt.Println("error in fetching credentials", err)
+			panic(err)
+
+		}
+		fmt.Println("\n\nCredentials of wallet created are", credentials)
+
+		UploadCredential(credentials, entity.Handle, med, "VerifiableCredential", DidDB.DID)
+		Response.Credentials = credentials
+		//	pub, pri, err := ed25519.GenerateKey(rand.Reader)
+
+		json.NewEncoder(w).Encode(Response)
+		return
+
+	}
+
+	//Create DID DOcument
+	// DIDDocumentCreation(pubKey, med, DidDB)
+
+	// Response.Privkey = privKey
+
+	// //create credentials
+	// FetchVC(entity, med, Config)
+	//	pub, pri, err := ed25519.GenerateKey(rand.Reader)
+
+	json.NewEncoder(w).Encode(Response)
+	return
+
+}
+
+func ReadDID(w http.ResponseWriter, req *http.Request, med *mediator.CmdsMediator) {
+	entity := new(createDIDRequest)
+	var Did string
+
+	err := CommandPayloadDecoder(req, &entity)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	key := datastore.NameKey(med.DB.DidDB, entity.Entity, nil)
+	err = med.DatastoreClient.Get(*med.Ctx, key, Did)
+	if err != nil {
+		fmt.Println("error in fetching did")
+		http.Error(w, "invalid entity", http.StatusBadRequest)
+		return
+
+	}
+	json.NewEncoder(w).Encode(Did)
+	return
+
+}
+func DeleteDID(w http.ResponseWriter, req *http.Request, med *mediator.CmdsMediator) {
+	entity := new(createDIDRequest)
+
+	err := CommandPayloadDecoder(req, &entity)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	key := datastore.NameKey(med.DB.DidDB, entity.Entity, nil)
+	err = med.DatastoreClient.Delete(*med.Ctx, key)
+	if err != nil {
+		fmt.Println("error in fetching did")
+		http.Error(w, "invalid entity", http.StatusBadRequest)
+		return
+
+	}
+	json.NewEncoder(w).Encode(http.StatusOK)
+	return
+}
+
+func GetDID(entity string, med *mediator.CmdsMediator) (string, error) {
+	var Did DIDDB
+	fmt.Println("entity is ", entity)
+	key := datastore.NameKey(med.DB.DidDB, entity, nil)
+	err := med.DatastoreClient.Get(*med.Ctx, key, &Did)
+	if err != nil {
+		fmt.Println("error in fetching did :", err)
+		//http.Error(w, "invalid entity", http.StatusBadRequest)
+		//panic(err)
+		return "", err
+
+	}
+	return Did.DID, nil
+
+}
+
+func GenerateWalletDID(hashEntity string, med *mediator.CmdsMediator, didtype string) (*DIDDB, *bbs12381g2pub.PublicKey, *bbs12381g2pub.PrivateKey, error) {
+
+	//hashEntity := entity.Entity
+	DidDB := new(DIDDB)
+	var PubKey *bbs12381g2pub.PublicKey
+
+	var PrivKey *bbs12381g2pub.PrivateKey
+
+	key := datastore.NameKey(med.DB.DidDB, hashEntity, nil)
+	err := med.DatastoreClient.Get(*med.Ctx, key, DidDB)
+	if err != nil {
+
+		//fmt.Println("entity is :", entity.Entity)
+		DidDB, PrivKey, PubKey = generateADID(hashEntity, med)
+
+		key := datastore.NameKey(med.DB.DidDB, hashEntity, nil)
+		med.DatastoreClient.Put(*med.Ctx, key, DidDB)
+	} else {
+		if DidDB.ActiveStatus == false {
+			//http.Error(w, "Deactivated did", http.StatusBadRequest)
+
+			return nil, nil, nil, errors.New("Deactivate did")
+
+		} else {
+			fmt.Println("already registered user", DidDB)
+
+			//json.NewEncoder(w).Encode(DidDB.DID)
+
+			return nil, nil, nil, errors.New("already registered")
+		}
+
+	}
+
+	return DidDB, PubKey, PrivKey, nil
+
+}
+
+func generateADID(hashEntity string, med *mediator.CmdsMediator) (*DIDDB, *bbs12381g2pub.PrivateKey, *bbs12381g2pub.PublicKey) {
+	PrivKey, PubKey := keys.GenerateKeys(hashEntity, med)
+	//fmt.Println("Privkeys are", PrivKey)
+	//fmt.Println("Pubkeys are", PubKey)
+	//fmt.Println("entity is", entity.Entity)
+	//	fmt.Println("error in getting wallet did", err, DidDB)
+	// hash the public key
+	bytePrivkey, _ := PrivKey.Marshal()
+
+	hash := sha256.Sum256(bytePrivkey)
+	buf := hash[:]
+	h := hex.EncodeToString(buf)
+	fmt.Printf("%64s - %6s - sha3-256 hash of user entity\n", h, "hex")
+
+	// truncate the hash to the lower 20 bytes
+	buf = hash[len(buf)-20:]
+	h = hex.EncodeToString(buf)
+	fmt.Printf("%64s - %6s - sha3-256 hash of user entity (lower 20 bytes / 160 bits)\n", h, "hex")
+
+	// prepend the multihash label for the hash algo, skip the varint length of the multihash, since that is fixed to 20
+	// buf = append([]byte{multihash.SHA3_256}, buf...)
+	// h = hex.EncodeToString(buf)
+	// fmt.Printf("%64s - %6s - multi hash prefix for sha3-256 (0x16) + hash of public key (lower 20 bytes)\n", h, "hex")
+	// base58 encode the above value
+	id := base58.Encode(buf)
+	fmt.Printf("%64s - %6s - multi hash prefix for sha3-256 (0x16) + hash of user entity (lower 20 bytes)\n", id, "base58")
+
+	// make the ockam DID
+	d := &schemadid.DID{Method: "web", ID: id}
+	Did := "did" + ":" + d.Method + ":" + d.ID
+	fmt.Println(Did)
+	DidDB := new(DIDDB)
+	DidDB.DID = Did
+	DidDB.ActiveStatus = true
+	return DidDB, PrivKey, PubKey
+}
+
+func IntegeratewithQNS(entity *createDIDRequest, med *mediator.CmdsMediator, vc *verifiable.Credential) {
+	//CALL QNS HERE
+	presentationdef, err := QNSNegotation("negotiateCredentials", "registerHandle", med)
+	if err != nil {
+		fmt.Println("error in fetching presentaton definataion from QNS", err)
+		panic(err)
+
+	}
+	//verifiableCred.Types = append(verifiableCred.Types, entity.CredentialType)
+	fmt.Println("\n\n\nGetting presentation is ---", presentationdef)
+	verifiableCredential, _ := vc.MarshalJSON()
+	var credentialtype []string
+	credentialtype = append(credentialtype, entity.CredentialType)
+
+	ParsePopulatePresentation(entity, presentationdef, entity.Handle, med, credentialtype, string(verifiableCredential), "selfSigned")
+
+	//Response = *vc
+	//call
+}
+
+// call this for handle credential or any type of credential
+func GenerateDID(w http.ResponseWriter, req *http.Request, med *mediator.CmdsMediator) {
+
+	entity := new(createDIDRequest)
+	err := CommandPayloadDecoder(req, &entity)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	// value := entity.Credentials[entity.Entity]
+	// str, _ := value.(string)
+
+	// hashEntity, err := db.CalculateSha512Hash(entity.Handle)
+	// if err != nil {
+	// 	fmt.Println("error in generating entity hash ", err)
+
+	// }
+	// fmt.Println("entity hash", hashEntity)
+	hashEntity := entity.Entity
+	//DID := new(DIDDB)
+
+	config := new(Association)
+	file, err := os.Open(configpathReal)
+	if err != nil {
+		fmt.Print("error in opening config file", err)
+
+	}
+	//DidDB := new(DIDDB)
+	err = json.NewDecoder(file).Decode(&config)
+	//fmt.Println("Config is: ", config)
+	if err != nil {
+		log.Println("Error is: ", err)
+
+	}
+	fmt.Println("checkking if already exist")
+
+	//fetch DID  from database
+	// DidDB := new(DIDDB)
+	// fmt.Println("hash entity", hashEntity)
+	// key := datastore.NameKey(med.DB.DidDB, hashEntity, nil)
+	// err = med.DatastoreClient.Get(*med.Ctx, key, &DidDB)
+	// if err != nil {
+	// 	fmt.Println("error in getting did", err)
+	// 	panic(err)
+
+	// }
+	userDID, err := GetDID(hashEntity, med)
+	if err != nil {
+		fmt.Println("error in fetching did", err)
+		panic(err)
+
+	}
+	// credentials, _, err := FetchVC(entity, med, config)
+	// fmt.Println("credentials are +++++", credentials)
+
+	// //DidDB.DidDB = make(map[string]interface{})
+	// //extendedDID :=
+
+	// keyPub := &keys.Privkey{}
+
+	// publicKeyKey := datastore.NameKey(med.DB.PubDB, hashEntity, nil)
+	// err = med.DatastoreClient.Get(*med.Ctx, publicKeyKey, keyPub)
+	// if err != nil {
+	// 	fmt.Println("error in getting public key:", err)
+	// 	os.Exit(1)
+
+	// }
+
+	// b := make([]byte, 16)
+
+	// //Copy the string into the byte array
+	// copy(b, []byte(entity.Entity))
+
+	// pubkey, _ := keys.DecryptPrivateKey(keyPub.Out, b)
+	// // fmt.Println("decrypt public key")
+	// pubkeyunmarshalled, errr := bbs12381g2pub.UnmarshalPublicKey(pubkey)
+	// if errr != nil {
+	// 	fmt.Println("error in unmarshaling public key", err)
+	// 	os.Exit(1)
+	vcUpload := &VCredential{}
+	// }
+	//	creden := new(verifiable.Credential)
+	fmt.Println("user did is ", userDID)
+	key := datastore.NameKey(med.DB.CredentialdDB, userDID, nil)
+	err = med.DatastoreClient.Get(*med.Ctx, key, vcUpload)
+	if err != nil {
+		fmt.Println("error in fetching idetity", err)
+
+		Response := new(registrationResponse)
+		fmt.Println("\nEntering into credential DB to fetch did")
+		credentials, _, err := FetchVC(entity, med, config)
+		if err != nil {
+			fmt.Println("error in fetching credentials", err)
+			panic(err)
+
+		}
+		UploadCredential(credentials, entity.Handle, med, entity.CredentialType, userDID)
+		Response.Credentials = credentials
+		//cred := ParseCredentials(credentials, med.Loader)
+		//IntegeratewithQNS(entity, med, cred)
+		//	pub, pri, err := ed25519.GenerateKey(rand.Reader)
+
+		json.NewEncoder(w).Encode(Response)
+		return
+	} else if err == nil {
+		//	VCs := &verifiable.Credential{}
+
+		//fmt.Println("credentials are +++++", vcUpload)
+		//	json.NewDecoder(VCs).Decode(vcUpload.Credn)
+		// err = json.Unmarshal(vcUpload.Credn, VCs)
+		// if err != nil {
+		// 	fmt.Println("-----------error in unmarshaling vc ", err)
+		// 	panic(err)
+
+		// }
+		//var stringCred string
+		claims := make(map[string]interface{})
+		//json.Unmarshal(vcUpload.Credn, stringCred)
+		credentials := GetCredentials(userDID, med)
+		//fmt.Println("\n\ngetting credentials are-----", credentials)
+
+		claims["verifiableCredential"] = credentials
+
+		str := claims["verifiableCredential"].(string)
+		//	fmt.Println("\n\nvalue is string ===", str)
+		fmt.Println("\n\nCredentials of user", str)
+
+		vcRes, err := verifiable.ParseCredential([]byte(str),
+			verifiable.WithJSONLDDocumentLoader(med.Loader),
+			verifiable.WithDisabledProofCheck())
+		if err != nil {
+			panic(fmt.Errorf("failed to decode VC JSON: %w", err))
+		}
+
+		fmt.Println("unmarshalled verifiable credentials ", vcRes)
+
+		for _, i := range config.CredGeneration[entity.CredentialType] {
+
+			fmt.Println("value creating credentials for", i)
+
+			val, ok := vcRes.Subject.(interface{})
+			if ok {
+				//check values in credential subject
+				fmt.Println("value is ", val, reflect.TypeOf(val))
+				credentialMap := make(map[string]interface{})
+				valueArray := val.([]verifiable.Subject)
+				PopulateStructFromInterface(valueArray[0].CustomFields, &credentialMap)
+				value, exists := credentialMap[entity.CredentialType]
+				fmt.Print("\n\nvalues in credential Map are ===", value, reflect.TypeOf(value))
+				if exists && entity.Handle == value {
+
+					fmt.Println("The value for key1 is:", value)
+					http.Error(w, "already contain credentials", http.StatusBadRequest)
+					return
+
+					// 	valueHandle := val.([]verifiable.Subject)
+					// 	var containHanlde bool
+					// 	for _, j := range valueHandle[0].CustomFields {
+					// 		fmt.Println("\n\nvalues in custon fields", j, reflect.TypeOf(valueHandle[0].CustomFields))
+					// 		if entity.Handle == j {
+					// 			containHanlde = true
+
+					// 		}
+
+					// 	}
+					// 	if containHanlde == false {
+					// 		fmt.Println("The value for key1 is:", value)
+					// 		http.Error(w, "already contain credentials", http.StatusBadRequest)
+					// 		return
+
+					// 	}
+
+				} else {
+
+					fmt.Println("key1 does not exist in the map")
+					Response := new(registrationResponse)
+
+					credentials, _, err := FetchVC(entity, med, config)
+					if err != nil {
+						fmt.Println("error in fetching credentials", err)
+						panic(err)
+
+					}
+
+					UploadCredential(credentials, entity.Handle, med, entity.CredentialType, userDID)
+					Response.Credentials = credentials
+					//cred := ParseCredentials(credentials, med.Loader)
+					//IntegeratewithQNS(entity, med, cred)
+					//	pub, pri, err := ed25519.GenerateKey(rand.Reader)
+
+					json.NewEncoder(w).Encode(Response)
+					return
+
+				}
+
+				// randomBytes, err := generateRandomBytes(32)
+				// if err != nil {
+				// 	fmt.Println("--error in generating randomhash", err)
+
+				// }
+
+				// hash := sha256.Sum256(randomBytes)
+				// buf := hash[:]
+				// h := hex.EncodeToString(buf)
+				// fmt.Printf("%64s - %6s - sha3-256 hash of user entity\n", h, "hex")
+
+				// // truncate the hash to the lower 20 bytes
+				// buf = hash[len(buf)-20:]
+				// h = hex.EncodeToString(buf)
+				// fmt.Printf("%64s - %6s - sha3-256 hash of user entity (lower 20 bytes / 160 bits)\n", h, "hex")
+
+				// // prepend the multihash label for the hash algo, skip the varint length of the multihash, since that is fixed to 20
+				// // buf = append([]byte{multihash.SHA3_256}, buf...)
+				// // h = hex.EncodeToString(buf)
+				// // fmt.Printf("%64s - %6s - multi hash prefix for sha3-256 (0x16) + hash of public key (lower 20 bytes)\n", h, "hex")
+				// // base58 encode the above value
+				// id := base58.Encode(buf)
+				// fmt.Printf("%64s - %6s - multi hash prefix for sha3-256 (0x16) + hash of user entity (lower 20 bytes)\n", id, "base58")
+
+				// // make the ockam DID
+				// d := &schemadid.DID{Method: "web", ID: id}
+				// Did := "did" + ":" + d.Method + ":" + d.ID
+
+				// fmt.Println(Did)
+				// DID.DID = Did
+				// DID.ActiveStatus = true
+				// //fmt.Println("entity is :", entity.Entity)
+				// if i != "handle" {
+				// 	DidDB.DidDB = append(DidDB.DidDB, *DID)
+				// } else {
+				// 	continue
+				// }
+				// fmt.Println("DidDB----", DidDB)
+
+				// DIDDocumentCreation(pubkeyunmarshalled, med, DID)
+				// key := datastore.NameKey(med.DB.ExtendedDID, hashEntity, nil)
+				// _, err = med.DatastoreClient.Put(*med.Ctx, key, DidDB)
+				// if err != nil {
+				// 	fmt.Println("error in stroing extended DID", err)
+
+				// }
+
+				// if DID.ActiveStatus == false {
+				// 	http.Error(w, "Deactivated did", http.StatusBadRequest)
+				// 	fmt.Println("active status false")
+				// 	return
+
+			}
+			fmt.Println("no interface in credentials claims", vcRes.Subject)
+
+		}
+
+	}
+}
+
+func generateRandomBytes(n int) ([]byte, error) {
+	bytes := make([]byte, n)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return nil, err
+	}
+	return bytes, nil
 }
