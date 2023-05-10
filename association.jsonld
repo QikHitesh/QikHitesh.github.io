@@ -71,7 +71,7 @@
             "@protected": true,
             "id":"@id",
             "type": "@type",
-            "WebPage":"https://schema.org/WebPage"
+            "url":"https://schema.org/url"
 
     
           
