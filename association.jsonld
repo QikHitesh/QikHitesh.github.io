@@ -41,11 +41,11 @@
         "description":"https://schema.org/description",
         "openingDate":"https://schema.org/foundingDate",
         "phoneNumber":"https://schema.org/telephone",
-        "website":"https://schema.org/url",
+        "website":"https://schema.org/keywords",
         "shortName":"https://schema.org/alternateName",
         "businessLocation":"https://schema.org/location",
         "serviceArea":"https://schema.org/areaServed",
-        "hours":"https://schema.org/keywords",
+        "hours":"https://schema.org/Time",
         "holidayHours":"https://schema.org/keywords",
         "defaultValue":"https://schema.org/defaultValue"
       }
