@@ -38,7 +38,7 @@
         "type": "@type",
         "businessName":"https://schema.org/legalName",
         "businessCategory":"https://schema.org/description",
-        "description":"https://schema.org/Text",
+        "description":"https://schema.org/description",
         "openingDate":"https://schema.org/foundingDate",
         "phoneNumber":"https://schema.org/telephone",
         "website":"https://schema.org/keywords",
@@ -58,9 +58,9 @@
              "@protected": true,
              "id":"@id",
              "type": "@type",
-            "twitter":"https://schema.org/description",
-            "facebook":"https://schema.org/description",
-            "webpage":"https://schema.org/description",
+            "twitter":"https://schema.org/WebSite",
+            "facebook":"https://schema.org/WebSite",
+            "webpage":"https://schema.org/WebSite",
             "defaultValue":"https://schema.org/defaultValue"
           }
 
