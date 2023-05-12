@@ -45,8 +45,8 @@
         "shortName":"https://schema.org/alternateName",
         "businessLocation":"https://schema.org/location",
         "serviceArea":"https://schema.org/areaServed",
-        "hours":"https://schema.org/Time",
-        "holidayHours":"https://schema.org/keywords",
+        "hours":"https://schema.org/OpeningHoursSpecification",
+        "holidayHours":"https://schema.org/Time",
         "defaultValue":"https://schema.org/defaultValue"
       }
     },
