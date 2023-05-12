@@ -38,7 +38,7 @@
         "type": "@type",
         "businessName":"https://schema.org/legalName",
         "businessCategory":"https://schema.org/description",
-        "description":"https://schema.org/description",
+        "description":"https://schema.org/Text",
         "openingDate":"https://schema.org/foundingDate",
         "phoneNumber":"https://schema.org/telephone",
         "website":"https://schema.org/keywords",
