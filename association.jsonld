@@ -58,9 +58,9 @@
              "@protected": true,
              "id":"@id",
              "type": "@type",
-            "twitter":"https://schema.org/WebSite",
-            "facebook":"https://schema.org/WebSite",
-            "webpage":"https://schema.org/WebSite",
+            "twitter":"https://schema.org/description",
+            "facebook":"https://schema.org/description",
+            "webpage":"https://schema.org/description",
             "defaultValue":"https://schema.org/defaultValue"
           }
 
