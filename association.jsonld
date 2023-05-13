@@ -58,9 +58,10 @@
              "@protected": true,
              "id":"@id",
              "type": "@type",
-            "twitter":"https://schema.org/WebSite",
-            "facebook":"https://schema.org/WebSite",
-            "webpage":"https://schema.org/WebSite",
+            "twitter":"https://schema.org/WebSite#twitter",
+            "facebook":"https://schema.org/WebSite#facebook",
+            "intagram":"https://schema.org/WebSite#instagram",
+            "webpage":"https://schema.org/WebSite#webpage",
             "defaultValue":"https://schema.org/defaultValue"
           }
 
