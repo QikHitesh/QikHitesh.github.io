@@ -59,7 +59,7 @@
              "id":"@id",
              "type": "@type",
             "twitter":"https://schema.org/WebSite#twitter",
-            "twitterVisiblity":"https://schema.org/accessibilityControl ",
+            "twitterVisiblity":"https://schema.org/accessibilityControl",
             "facebook":"https://schema.org/WebSite#facebook",
             "facebookVisiblity":"https://schema.org/WebSite#facebook",
             "instagram":"https://schema.org/WebSite#instagram",
