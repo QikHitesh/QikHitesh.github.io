@@ -58,8 +58,10 @@
              "@protected": true,
              "id":"@id",
              "type": "@type",
-            "twitter":"https://schema.org/WebSite#twitter",
-            "twitterVisiblity":"https://schema.org/accessibilityControl",
+
+
+           
+           
             "facebook":"https://schema.org/WebSite#facebook",
             "facebookVisiblity":"https://schema.org/WebSite#facebook",
             "instagram":"https://schema.org/WebSite#instagram",
@@ -69,6 +71,23 @@
           }
 
     
+
+  },
+
+  "twitter":{
+    "@id":"https://schema.org/WebSite#twitter",
+    "@context": {
+        "@version": 1.1,
+        "@protected": true,
+        "id":"@id",
+        "url":"https://schema.org/WebPage#twitter",
+        "twitterVisiblity":"https://schema.org/accessibilityControl",
+        "defaultValue":"https://schema.org/defaultValue"
+
+
+      
+     
+}
 
   },
     "SmartStacks":{
