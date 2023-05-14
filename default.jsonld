@@ -1,0 +1,108 @@
+{
+    "@context": {
+      "@version": 1.1,
+      "@protected": true,
+      "CertificationOfOrigin": {
+        "@id": "https://w3id.org/traceability#CertificationOfOrigin",
+        "@context": {
+          "@version": 1.1,
+          "@protected": true,
+  
+          "id": "@id",
+          "type": "@type"
+        }
+      },
+  "Person":{
+    "@id": "https://schema.org/Person",
+        "@context": {
+          "@version": 1.1,
+          "@protected": true,
+          "id":"@id",
+          "type": "@type",
+        "givenName":"https://schema.org/givenName",
+        "familyName":"https://schema.org/familyName",
+        "email":"https://schema.org/email",
+        "telephone":"https://schema.org/telephone",
+        "description":"https://schema.org/description",
+        "address":"https://schema.org/address",
+        "defaultValue":"https://schema.org/defaultValue"
+    
+  }
+      
+    },
+    "Organization":{
+        "@id":"https://schema.org/Organization",
+        "@context":{ "@version": 1.1,
+        "@protected": true,
+        "id":"@id",
+        "type": "@type",
+        "businessName":"https://schema.org/legalName",
+        "businessCategory":"https://schema.org/description",
+        "description":"https://schema.org/Text",
+        "openingDate":"https://schema.org/foundingDate",
+        "phoneNumber":"https://schema.org/telephone",
+        "website":"https://schema.org/keywords",
+        "shortName":"https://schema.org/alternateName",
+        "businessLocation":"https://schema.org/location",
+        "serviceArea":"https://schema.org/areaServed",
+        "hours":"https://schema.org/OpeningHoursSpecification",
+        "holidayHours":"https://schema.org/Time",
+        "defaultValue":"https://schema.org/defaultValue"
+      }
+    },
+    "WebSite":{
+        "@id":"https://schema.org/WebSite",
+        "@context": 
+          {
+             "@version": 1.1,
+             "@protected": true,
+             "id":"@id",
+             "type": "@type",
+            "twitter":"https://schema.org/WebSite#twitter",
+            "twitterVisiblity":"https://schema.org/accessibilityControl",
+            "facebook":"https://schema.org/WebSite#facebook",
+            "facebookVisiblity":"https://schema.org/WebSite#facebook",
+            "instagram":"https://schema.org/WebSite#instagram",
+            "linkedIn":"https://schema.org/WebSite#linkedIn",
+            "webpage":"https://schema.org/WebSite#webpage",
+            "defaultValue":"https://schema.org/defaultValue"
+          }
+
+    
+
+  },
+    "SmartStacks":{
+        "@id":"https://schema.org/WebPage",
+        "@context": {
+            "@version": 1.1,
+            "@protected": true,
+            "id":"@id",
+            "type": "@type",
+            "WebPage":"https://schema.org/WebPage",
+            "defaultValue":"https://schema.org/defaultValue"
+
+    
+          
+         
+    }
+
+    },
+    "IPFS":{
+      "@id":"https://schema.org/url",
+      "@context": {
+          "@version": 1.1,
+          "@protected": true,
+          "id":"@id",
+          "type": "@type",
+          "url":"https://schema.org/url",
+          "defaultValue":"https://schema.org/defaultValue"
+
+  
+        
+       
+  }
+
+    }
+ 
+}
+}
