@@ -58,8 +58,17 @@
              "@protected": true,
              "id":"@id",
              "type": "@type",
-            "twitter":"https://schema.org/WebSite#twitter",
-            "twitterVisiblity":"https://schema.org/accessibilityControl",
+
+
+             "twitter":{
+              "@version": 1.1,
+              "@protected": true,
+              "url":"https://schema.org/WebSite#twitter",
+              "visiblity":"https://schema.org/accessibilityControl"
+
+
+             },
+           
             "facebook":"https://schema.org/WebSite#facebook",
             "facebookVisiblity":"https://schema.org/WebSite#facebook",
             "instagram":"https://schema.org/WebSite#instagram",
