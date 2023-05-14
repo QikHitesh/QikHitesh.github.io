@@ -61,7 +61,6 @@
 
 
              "twitter":{
-              "@version": 1.1,
               "@protected": true,
               "WebSite":"https://schema.org/WebSite#twitter",
               "accessibilityControl":"https://schema.org/accessibilityControl"
