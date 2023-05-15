@@ -41,7 +41,7 @@
         "description":"https://schema.org/Text",
         "openingDate":"https://schema.org/foundingDate",
         "phoneNumber":"https://schema.org/telephone",
-        "website":"https://schema.org/keywords",
+        "website":"https://schema.org/website#business",
         "shortName":"https://schema.org/alternateName",
         "businessLocation":"https://schema.org/location",
         "serviceArea":"https://schema.org/areaServed",
@@ -50,7 +50,7 @@
         "defaultValue":"https://schema.org/defaultValue"
       }
     },
-    "WebSite":{
+    "Social":{
         "@id":"https://schema.org/WebSite#associations",
         "@context": 
           {
@@ -63,7 +63,7 @@
            
            
             "facebook":"https://schema.org/WebSite#facebook",
-            "facebookVisiblity":"https://schema.org/WebSite#facebook",
+            "facebookVisiblity":"https://schema.org/WebSite#facebookVisiblity",
             "instagram":"https://schema.org/WebSite#instagram",
             "linkedIn":"https://schema.org/WebSite#linkedIn",
             "webpage":"https://schema.org/WebSite#webpage",
@@ -74,22 +74,6 @@
 
   },
 
-  "twitter":{
-    "@id":"https://schema.org/WebSite#twitter",
-    "@context": {
-        "@version": 1.1,
-        "@protected": true,
-        "id":"@id",
-        "url":"https://schema.org/WebPage#twitter",
-        "twitterVisiblity":"https://schema.org/accessibilityControl",
-        "defaultValue":"https://schema.org/defaultValue"
-
-
-      
-     
-}
-
-  },
     "SmartStacks":{
         "@id":"https://schema.org/WebPage",
         "@context": {
@@ -97,7 +81,7 @@
             "@protected": true,
             "id":"@id",
             "type": "@type",
-            "WebPage":"https://schema.org/WebPage",
+            "stacks":"https://schema.org/WebPage#stacks",
             "defaultValue":"https://schema.org/defaultValue"
 
     
@@ -113,7 +97,7 @@
           "@protected": true,
           "id":"@id",
           "type": "@type",
-          "url":"https://schema.org/url",
+          "cid":"https://schema.org/Text#cid",
           "defaultValue":"https://schema.org/defaultValue"
 
   
@@ -123,13 +107,13 @@
 
     },
     "website":{
-      "@id":"https://schema.org/WebSite",
+      "@id":"https://schema.org/WebSite#ipaddress",
       "@context": {
           "@version": 1.1,
           "@protected": true,
           "id":"@id",
           "type": "@type",
-          "ipaddress":"https://schema.org/url",
+          "ipAddress":"https://schema.org/Text#ipaddress",
           "defaultValue":"https://schema.org/defaultValue"
 
   
