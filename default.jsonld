@@ -50,18 +50,20 @@
         "defaultValue":"https://schema.org/defaultValue"
       }
     },
-    "WebSite":{
-        "@id":"https://schema.org/WebSite",
+    "Social":{
+        "@id":"https://schema.org/WebSite#associations",
         "@context": 
           {
              "@version": 1.1,
              "@protected": true,
              "id":"@id",
              "type": "@type",
-            "twitter":"https://schema.org/WebSite#twitter",
-            "twitterVisiblity":"https://schema.org/accessibilityControl",
+
+
+           
+           
             "facebook":"https://schema.org/WebSite#facebook",
-            "facebookVisiblity":"https://schema.org/WebSite#facebook",
+            "facebookVisiblity":"https://schema.org/WebSite#facebookVisiblity",
             "instagram":"https://schema.org/WebSite#instagram",
             "linkedIn":"https://schema.org/WebSite#linkedIn",
             "webpage":"https://schema.org/WebSite#webpage",
@@ -71,6 +73,7 @@
     
 
   },
+
     "SmartStacks":{
         "@id":"https://schema.org/WebPage",
         "@context": {
@@ -78,7 +81,7 @@
             "@protected": true,
             "id":"@id",
             "type": "@type",
-            "WebPage":"https://schema.org/WebPage",
+            "stacks":"https://schema.org/WebPage#stacks",
             "defaultValue":"https://schema.org/defaultValue"
 
     
@@ -94,7 +97,23 @@
           "@protected": true,
           "id":"@id",
           "type": "@type",
-          "url":"https://schema.org/url",
+          "cid":"https://schema.org/Text#cid",
+          "defaultValue":"https://schema.org/defaultValue"
+
+  
+        
+       
+  }
+
+    },
+    "website":{
+      "@id":"https://schema.org/WebSite#ipaddress",
+      "@context": {
+          "@version": 1.1,
+          "@protected": true,
+          "id":"@id",
+          "type": "@type",
+          "ipAddress":"https://schema.org/Text#ipaddress",
           "defaultValue":"https://schema.org/defaultValue"
 
   
