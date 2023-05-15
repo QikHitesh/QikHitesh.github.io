@@ -41,7 +41,7 @@
         "description":"https://schema.org/Text",
         "openingDate":"https://schema.org/foundingDate",
         "phoneNumber":"https://schema.org/telephone",
-        "website":"https://schema.org/keywords",
+        "website":"https://schema.org/website#business",
         "shortName":"https://schema.org/alternateName",
         "businessLocation":"https://schema.org/location",
         "serviceArea":"https://schema.org/areaServed",
