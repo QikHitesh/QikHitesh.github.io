@@ -37,11 +37,11 @@
         "id":"@id",
         "type": "@type",
         "businessName":"https://schema.org/legalName",
-        "businessCategory":"https://schema.org/description",
-        "description":"https://schema.org/Text",
+        "businessCategory":"https://schema.org/description#category",
+        "description":"https://schema.org/description",
         "openingDate":"https://schema.org/foundingDate",
         "phoneNumber":"https://schema.org/telephone",
-        "website":"https://schema.org/website#business",
+        "website":"https://schema.org/WebSite#business",
         "shortName":"https://schema.org/alternateName",
         "businessLocation":"https://schema.org/location",
         "serviceArea":"https://schema.org/areaServed",
@@ -106,7 +106,7 @@
   }
 
     },
-    "website":{
+    "userWebsite":{
       "@id":"https://schema.org/WebSite#ipaddress",
       "@context": {
           "@version": 1.1,
