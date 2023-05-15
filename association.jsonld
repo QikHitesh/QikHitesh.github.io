@@ -12,8 +12,8 @@
           "type": "@type"
         }
       },
-  "Person":{
-    "@id": "https://schema.org/Person",
+  "PII":{
+    "@id": "https://schema.org/Person#informations",
         "@context": {
           "@version": 1.1,
           "@protected": true,
@@ -123,18 +123,19 @@
 
     },
     "Identity":{ 
-      "@id":"https://schema.org/identifier",
+      "@id":"https://schema.org/identifier#handle",
     "@context": {
         "@version": 1.1,
-        "@protected": true,
+       
         "id":"@id",
         "type": "@type",
-        "handle":"https://schema.org/identifier#handle"
+        "handle":"https://schema.org/Text"
 
 
       
      
-}}
+}
+}
  
 }
 }
