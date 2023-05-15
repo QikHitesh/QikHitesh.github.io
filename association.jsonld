@@ -51,7 +51,7 @@
       }
     },
     "WebSite":{
-        "@id":"https://schema.org/WebSite",
+        "@id":"https://schema.org/WebSite#associations",
         "@context": 
           {
              "@version": 1.1,
@@ -114,6 +114,22 @@
           "id":"@id",
           "type": "@type",
           "url":"https://schema.org/url",
+          "defaultValue":"https://schema.org/defaultValue"
+
+  
+        
+       
+  }
+
+    },
+    "website":{
+      "@id":"https://schema.org/WebSite",
+      "@context": {
+          "@version": 1.1,
+          "@protected": true,
+          "id":"@id",
+          "type": "@type",
+          "ipaddress":"https://schema.org/url",
           "defaultValue":"https://schema.org/defaultValue"
 
   
