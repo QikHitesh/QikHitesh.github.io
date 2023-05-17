@@ -58,15 +58,11 @@
              "@protected": true,
              "id":"@id",
              "type": "@type",
-
-
-           
-           
             "facebook":"https://schema.org/WebSite#facebook",
-            "facebookVisiblity":"https://schema.org/WebSite#facebookVisiblity",
             "instagram":"https://schema.org/WebSite#instagram",
             "linkedIn":"https://schema.org/WebSite#linkedIn",
-            "webpage":"https://schema.org/WebSite#webpage",
+            "twitter":"https://schema.org/WebSite#twitter",
+            "google+":"https://schema.org/WebSite#google+",
             "defaultValue":"https://schema.org/defaultValue"
           }
 
@@ -123,17 +119,14 @@
 
     },
     "Identity":{ 
-      "@id":"https://schema.org/identifier#handle",
+      "@id":"https://schema.org/Text",
     "@context": {
         "@version": 1.1,
        
         "id":"@id",
         "type": "@type",
-        "handle":"https://schema.org/Text"
-
-
-      
-     
+        "handle":"https://schema.org/identifier",
+        "handleType":"https://schema.org/keywords#type"  
 }
 }
  
