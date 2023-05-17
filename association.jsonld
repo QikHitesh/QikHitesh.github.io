@@ -60,9 +60,9 @@
              "type": "@type",
             "facebook":"https://schema.org/WebSite#facebook",
             "instagram":"https://schema.org/WebSite#instagram",
-            "linkedIn":"https://schema.org/WebSite#linkedIn",
+            "linkedin":"https://schema.org/WebSite#linkedin",
             "twitter":"https://schema.org/WebSite#twitter",
-            "google+":"https://schema.org/WebSite#google+",
+            "gmail":"https://schema.org/WebSite#gmail",
             "defaultValue":"https://schema.org/defaultValue"
           }
 
