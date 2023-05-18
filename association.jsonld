@@ -2,8 +2,8 @@
     "@context": {
       "@version": 1.1,
       "@protected": true,
-      "SelfSignedCred": {
-        "@id": "https://w3id.org/traceability#SelfSignedCred",
+      "SelfSignedCredential": {
+        "@id": "https://w3id.org/traceability#SelfSignedCredential",
         "@context": {
           "@version": 1.1,
           "@protected": true,
