@@ -25,7 +25,7 @@
         "telephone":"https://schema.org/telephone",
         "description":"https://schema.org/description",
         "address":"https://schema.org/address",
-        "defaultValue":"https://schema.org/defaultValue"
+        "defaultValue":"https://schema.org/Boolean"
     
   }
       
@@ -47,7 +47,7 @@
         "serviceArea":"https://schema.org/areaServed",
         "hours":"https://schema.org/OpeningHoursSpecification",
         "holidayHours":"https://schema.org/Time",
-        "defaultValue":"https://schema.org/defaultValue"
+        "defaultValue":"https://schema.org/Boolean"
       }
     },
     "Social":{
@@ -63,7 +63,7 @@
             "linkedin":"https://schema.org/WebSite#linkedin",
             "twitter":"https://schema.org/WebSite#twitter",
             "gmail":"https://schema.org/WebSite#gmail",
-            "defaultValue":"https://schema.org/defaultValue"
+            "defaultValue":"https://schema.org/Boolean"
           }
 
     
@@ -78,7 +78,7 @@
             "id":"@id",
             "type": "@type",
             "stacks":"https://schema.org/WebPage#stacks",
-            "defaultValue":"https://schema.org/defaultValue"
+            "defaultValue":"https://schema.org/Boolean"
 
     
           
@@ -94,7 +94,7 @@
           "id":"@id",
           "type": "@type",
           "cid":"https://schema.org/Text#cid",
-          "defaultValue":"https://schema.org/defaultValue"
+          "defaultValue":"https://schema.org/Boolean"
 
   
         
@@ -110,11 +110,7 @@
           "id":"@id",
           "type": "@type",
           "ipAddress":"https://schema.org/Text#ipaddress",
-          "defaultValue":"https://schema.org/defaultValue"
-
-  
-        
-       
+          "defaultValue":"https://schema.org/Boolean"
   }
 
     },
