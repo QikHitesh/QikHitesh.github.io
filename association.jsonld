@@ -1,130 +1,130 @@
 {
-    "@context": {
-      "@version": 1.1,
-      "@protected": true,
-      "SelfSignedCredential": {
-        "@id": "https://w3id.org/traceability#SelfSignedCredential",
-        "@context": {
-          "@version": 1.1,
-          "@protected": true,
-  
-          "id": "@id",
-          "type": "@type"
-        }
-      },
-  "PII":{
-    "@id": "https://schema.org/Person#informations",
-        "@context": {
-          "@version": 1.1,
-          "@protected": true,
-          "id":"@id",
-          "type": "@type",
-        "givenName":"https://schema.org/givenName",
-        "familyName":"https://schema.org/familyName",
-        "email":"https://schema.org/email",
-        "telephone":"https://schema.org/telephone",
-        "description":"https://schema.org/description",
-        "address":"https://schema.org/address",
-        "defaultValue":"https://schema.org/Boolean"
-    
-  }
-      
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "SelfSignedCredential": {
+      "@id": "https://w3id.org/traceability#SelfSignedCredential",
+      "@context": {
+        "@version": 1.1,
+        "@protected": true,
+
+        "id": "@id",
+        "type": "@type"
+      }
     },
-    "Organization":{
-        "@id":"https://schema.org/Organization",
-        "@context":{ "@version": 1.1,
+"PII":{
+  "@id": "https://schema.org/Person#informations",
+      "@context": {
+        "@version": 1.1,
         "@protected": true,
         "id":"@id",
         "type": "@type",
-        "businessName":"https://schema.org/legalName",
-        "businessCategory":"https://schema.org/description#category",
-        "description":"https://schema.org/description",
-        "openingDate":"https://schema.org/foundingDate",
-        "phoneNumber":"https://schema.org/telephone",
-        "website":"https://schema.org/WebSite#business",
-        "shortName":"https://schema.org/alternateName",
-        "businessLocation":"https://schema.org/location",
-        "serviceArea":"https://schema.org/areaServed",
-        "hours":"https://schema.org/OpeningHoursSpecification",
-        "holidayHours":"https://schema.org/Time",
-        "defaultValue":"https://schema.org/Boolean"
-      }
-    },
-    "Social":{
-        "@id":"https://schema.org/WebSite#associations",
-        "@context": 
-          {
-             "@version": 1.1,
-             "@protected": true,
-             "id":"@id",
-             "type": "@type",
-            "facebook":"https://schema.org/WebSite#facebook",
-            "instagram":"https://schema.org/WebSite#instagram",
-            "linkedin":"https://schema.org/WebSite#linkedin",
-            "twitter":"https://schema.org/WebSite#twitter",
-            "gmail":"https://schema.org/WebSite#gmail",
-            "defaultValue":"https://schema.org/Boolean"
-          }
-
+      "givenName":"https://schema.org/givenName",
+      "familyName":"https://schema.org/familyName",
+      "email":"https://schema.org/email",
+      "telephone":"https://schema.org/telephone",
+      "description":"https://schema.org/description",
+      "address":"https://schema.org/address",
+      "defaultValue":"https://schema.org/defaultValue"
+  
+}
     
-
   },
-
-    "SmartStacks":{
-        "@id":"https://schema.org/WebPage",
-        "@context": {
-            "@version": 1.1,
-            "@protected": true,
-            "id":"@id",
-            "type": "@type",
-            "stacks":"https://schema.org/WebPage#stacks",
-            "defaultValue":"https://schema.org/Boolean"
-
-    
-          
-         
+  "Organization":{
+      "@id":"https://schema.org/Organization",
+      "@context":{ "@version": 1.1,
+      "@protected": true,
+      "id":"@id",
+      "type": "@type",
+      "businessName":"https://schema.org/legalName",
+      "businessCategory":"https://schema.org/description#category",
+      "description":"https://schema.org/description",
+      "openingDate":"https://schema.org/foundingDate",
+      "phoneNumber":"https://schema.org/telephone",
+      "website":"https://schema.org/WebSite#business",
+      "shortName":"https://schema.org/alternateName",
+      "businessLocation":"https://schema.org/location",
+      "serviceArea":"https://schema.org/areaServed",
+      "hours":"https://schema.org/OpeningHoursSpecification",
+      "holidayHours":"https://schema.org/Time",
+      "defaultValue":"https://schema.org/defaultValue"
     }
+  },
+  "Social":{
+      "@id":"https://schema.org/WebSite#associations",
+      "@context": 
+        {
+           "@version": 1.1,
+           "@protected": true,
+           "id":"@id",
+           "type": "@type",
+          "facebook":"https://schema.org/WebSite#facebook",
+          "instagram":"https://schema.org/WebSite#instagram",
+          "linkedin":"https://schema.org/WebSite#linkedin",
+          "twitter":"https://schema.org/WebSite#twitter",
+          "gmail":"https://schema.org/WebSite#gmail",
+          "defaultValue":"https://schema.org/defaultValue"
+        }
 
-    },
-    "IPFS":{
-      "@id":"https://schema.org/url",
+  
+
+},
+
+  "SmartStacks":{
+      "@id":"https://schema.org/WebPage",
       "@context": {
           "@version": 1.1,
           "@protected": true,
           "id":"@id",
           "type": "@type",
-          "cid":"https://schema.org/Text#cid",
-          "defaultValue":"https://schema.org/Boolean"
+          "stacks":"https://schema.org/WebPage#stacks",
+          "defaultValue":"https://schema.org/defaultValue"
 
   
         
        
   }
 
-    },
-    "userWebsite":{
-      "@id":"https://schema.org/WebSite#ipaddress",
-      "@context": {
-          "@version": 1.1,
-          "@protected": true,
-          "id":"@id",
-          "type": "@type",
-          "ipAddress":"https://schema.org/Text#ipaddress",
-          "defaultValue":"https://schema.org/Boolean"
-  }
-
-    },
-    "Identity":{ 
-      "@id":"https://schema.org/Text",
+  },
+  "IPFS":{
+    "@id":"https://schema.org/url",
     "@context": {
         "@version": 1.1,
-       
+        "@protected": true,
         "id":"@id",
         "type": "@type",
-        "handle":"https://schema.org/identifier",
-        "handleType":"https://schema.org/keywords#type"  
+        "cid":"https://schema.org/Text#cid",
+        "defaultValue":"https://schema.org/defaultValue"
+
+
+      
+     
+}
+
+  },
+  "userWebsite":{
+    "@id":"https://schema.org/WebSite#ipaddress",
+    "@context": {
+        "@version": 1.1,
+        "@protected": true,
+        "id":"@id",
+        "type": "@type",
+        "ipAddress":"https://schema.org/Text#ipaddress",
+        "defaultValue":"https://schema.org/defaultValue"
+}
+
+  },
+  "Identity":{ 
+    "@id":"https://schema.org/Text",
+  "@context": {
+      "@version": 1.1,
+     
+      "id":"@id",
+      "type": "@type",
+      "handle":"https://schema.org/identifier",
+      "handleType":"https://schema.org/keywords#type"  
 }
 }
- 
+
 }
 }
