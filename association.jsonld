@@ -12,7 +12,7 @@
         "type": "@type"
       }
     },
-"pii":{
+"PII":{
   "@id": "https://schema.org/Person#informations",
       "@context": {
         "@version": 1.1,
