@@ -12,7 +12,7 @@
         "type": "@type"
       }
     },
-"PII":{
+"pii":{
   "@id": "https://schema.org/Person#informations",
       "@context": {
         "@version": 1.1,
@@ -30,7 +30,7 @@
 }
     
   },
-  "Organization":{
+  "organization":{
       "@id":"https://schema.org/Organization",
       "@context":{ "@version": 1.1,
       "@protected": true,
@@ -50,7 +50,7 @@
       "defaultValue":"https://schema.org/defaultValue"
     }
   },
-  "Social":{
+  "social":{
       "@id":"https://schema.org/WebSite#associations",
       "@context": 
         {
@@ -70,7 +70,7 @@
 
 },
 
-  "SmartStacks":{
+  "smartstacks":{
       "@id":"https://schema.org/WebPage",
       "@context": {
           "@version": 1.1,
@@ -86,7 +86,7 @@
   }
 
   },
-  "IPFS":{
+  "ipfs":{
     "@id":"https://schema.org/url",
     "@context": {
         "@version": 1.1,
@@ -102,7 +102,7 @@
 }
 
   },
-  "userWebsite":{
+  "userwebsite":{
     "@id":"https://schema.org/WebSite#ipaddress",
     "@context": {
         "@version": 1.1,
