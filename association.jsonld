@@ -37,15 +37,14 @@
       "id":"@id",
       "type": "@type",
       "businessName":"https://schema.org/legalName",
-      "businessCategory":"https://schema.org/description#category",
+      "businessCompany":"https://schema.org/legalName#category",
       "description":"https://schema.org/description",
       "openingDate":"https://schema.org/foundingDate",
       "phoneNumber":"https://schema.org/telephone",
-      "website":"https://schema.org/WebSite#business",
-      "shortName":"https://schema.org/alternateName",
+      "websiteUrl":"https://schema.org/WebSite#business",
       "businessLocation":"https://schema.org/location",
       "serviceArea":"https://schema.org/areaServed",
-      "hours":"https://schema.org/OpeningHoursSpecification",
+      "businessHours":"https://schema.org/OpeningHoursSpecification",
       "holidayHours":"https://schema.org/Time",
       "defaultValue":"https://schema.org/defaultValue"
     }
