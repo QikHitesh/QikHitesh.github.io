@@ -40,12 +40,11 @@
       "businessCompany":"https://schema.org/legalName#category",
       "description":"https://schema.org/description",
       "openingDate":"https://schema.org/foundingDate",
-      "phoneNumber":"https://schema.org/telephone",
+      "phoneNumber":"https://schema.org/telephone#business",
       "websiteUrl":"https://schema.org/WebSite#business",
-      "businessLocation":"https://schema.org/location",
-      "serviceArea":"https://schema.org/areaServed",
-      "businessHours":"https://schema.org/OpeningHoursSpecification",
-      "holidayHours":"https://schema.org/Time",
+      "businessLocation":"https://schema.org/location#business",
+      "serviceArea":"https://schema.org/Country#business",
+      "businessHours":"https://schema.org/openingHours#business",
       "defaultValue":"https://schema.org/defaultValue"
     }
   },
@@ -113,6 +112,7 @@
 }
 
   },
+  
   "Identity":{ 
     "@id":"https://schema.org/Text",
   "@context": {
