@@ -41,7 +41,7 @@
       "description":"https://schema.org/description",
       "openingDate":"https://schema.org/foundingDate",
       "telephone":"https://schema.org/telephone#business",
-      "websiteNumber":"https://schema.org/telephone#support",
+      "websiteNumber":"https://schema.org/telephone",
       "businessLocation":"https://schema.org/location#business",
       "serviceArea":"https://schema.org/Country#business",
       "businessHours":"https://schema.org/openingHours#business",
